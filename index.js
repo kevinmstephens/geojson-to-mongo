@@ -4,7 +4,6 @@ var _ = require("lodash");
 var async = require("async");
 var es = require("event-stream");
 var fs = require("fs");
-var Hoek = require("hoek");
 var path = require("path");
 var program = require("commander");
 var attributes = require("./package.json");
@@ -16,6 +15,7 @@ program
   .option("--input [path]", "Required. Path to input geoJSON file")
   .option("--uri [uri]", "Optional. Default \"mongodb://localhost:27017/test\"", "mongodb://localhost:27017/test")
   .option("--collection [name]", "Required. Collection to write to")
+  .option("--drop-collection", "Optional. Drop the collection before insertions")
   .parse(process.argv);
 
 // Throw if a required flag is missing"
@@ -25,6 +25,8 @@ _.each(["input", "collection"], function (item) {
   }
 });
 
+var documentCount;
+
 // Use connect method to connect to the Server
 MongoClient.connect(program.uri, function(err, db) {
   if (err) { throw err; }
@@ -33,6 +35,13 @@ MongoClient.connect(program.uri, function(err, db) {
   var collection = db.collection(program.collection);
 
   async.series([
+    function (callback) {
+      if (!program.dropCollection) {
+        return callback();
+      }
+
+      collection.drop(callback);
+    },
     function (callback) {
       collection.ensureIndex({ "geometry": "2dsphere" }, callback);
     },
@@ -51,13 +60,14 @@ MongoClient.connect(program.uri, function(err, db) {
         }));
 
       stream.on("end", function () {
+        documentCount = n;
         callback();
       });
     }
 
   ], function (err, data) {
     if (err) { throw err; }
-    console.log("Success");
-    MongoClient.close();
+    console.log("Success: " + documentCount + " documents saved");
+    db.close();
   });
 });

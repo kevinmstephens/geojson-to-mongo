@@ -7,7 +7,8 @@ Also creates a `2dsphere` index on the `geometry` field of the geoJSON documents
 
 #### Motivation
 
-Getting sick of moving CENSUS shapefiles to MongoDB and wanting to build a CLI tool to do that for me. I hope to allow shpefile input in the future and allow for simplification
+Getting sick of moving CENSUS shapefiles to MongoDB and wanting to build a CLI tool to do that for me.
+Shapefile input and simplification coming...
 
 ## Quick Start
 
@@ -40,6 +41,13 @@ The following will connect to the `tracts` db on the mongo instance at `localhos
 See all of the CLI options.
 
 `./node_modules/.bin/geojson-to-mongo --help`
+
+```
+    --input [path]       Required. Path to input geoJSON file
+    --uri [uri]          Optional. Default "mongodb://localhost:27017/test"
+    --collection [name]  Required. Collection to write to
+    --drop-collection    Optional. Default false. Drop the collection before insertions
+```
 
 ### Mongoose Example
 
