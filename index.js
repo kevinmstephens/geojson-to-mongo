@@ -15,6 +15,7 @@ program
   .option("--input [path]", "Required. Path to input geoJSON file")
   .option("--uri [uri]", "Optional. Default \"mongodb://localhost:27017/test\"", "mongodb://localhost:27017/test")
   .option("--collection [name]", "Required. Collection to write to")
+  .option("--drop-collection", "Optional. Drop the collection before insertions")
   .parse(process.argv);
 
 // Throw if a required flag is missing"
@@ -34,6 +35,13 @@ MongoClient.connect(program.uri, function(err, db) {
   var collection = db.collection(program.collection);
 
   async.series([
+    function (callback) {
+      if (!program.dropCollection) {
+        return callback();
+      }
+
+      collection.drop(callback);
+    },
     function (callback) {
       collection.ensureIndex({ "geometry": "2dsphere" }, callback);
     },

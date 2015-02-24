@@ -42,6 +42,13 @@ See all of the CLI options.
 
 `./node_modules/.bin/geojson-to-mongo --help`
 
+```
+    --input [path]       Required. Path to input geoJSON file
+    --uri [uri]          Optional. Default "mongodb://localhost:27017/test"
+    --collection [name]  Required. Collection to write to
+    --drop-collection    Optional. Default false. Drop the collection before insertions
+```
+
 ### Mongoose Example
 
 This example schema and schema method will work the `tracts` collection.
