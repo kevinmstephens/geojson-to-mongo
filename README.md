@@ -1,5 +1,5 @@
 
-# mongo-to-json
+# geojson-to-mongo
 
 A simple CLI tool that takes in a geoJSON feature collection and adds the features as documents to a mongo collection. Built using streams so it can handle HUGE files (think CENSUS BLOCKS for all of USA!).
 
