@@ -4,7 +4,6 @@ var _ = require("lodash");
 var async = require("async");
 var es = require("event-stream");
 var fs = require("fs");
-var Hoek = require("hoek");
 var path = require("path");
 var program = require("commander");
 var attributes = require("./package.json");
@@ -24,6 +23,8 @@ _.each(["input", "collection"], function (item) {
     throw new Error("--" + item + " required");
   }
 });
+
+var documentCount;
 
 // Use connect method to connect to the Server
 MongoClient.connect(program.uri, function(err, db) {
@@ -51,13 +52,14 @@ MongoClient.connect(program.uri, function(err, db) {
         }));
 
       stream.on("end", function () {
+        documentCount = n;
         callback();
       });
     }
 
   ], function (err, data) {
     if (err) { throw err; }
-    console.log("Success");
-    MongoClient.close();
+    console.log("Success: " + documentCount + " documents saved");
+    db.close();
   });
 });

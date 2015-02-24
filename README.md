@@ -1,5 +1,5 @@
 
-# mongo-to-json
+# geojson-to-mongo
 
 A simple CLI tool that takes in a geoJSON feature collection and adds the features as documents to a mongo collection. Built using streams so it can handle HUGE files (think CENSUS BLOCKS for all of USA!).
 
@@ -7,7 +7,8 @@ Also creates a `2dsphere` index on the `geometry` field of the geoJSON documents
 
 #### Motivation
 
-Getting sick of moving CENSUS shapefiles to MongoDB and wanting to build a CLI tool to do that for me. I hope to allow shpefile input in the future and allow for simplification
+Getting sick of moving CENSUS shapefiles to MongoDB and wanting to build a CLI tool to do that for me.
+Shapefile input and simplification coming...
 
 ## Quick Start
 
