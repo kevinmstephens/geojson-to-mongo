@@ -32,6 +32,25 @@ MongoClient.connect(program.uri, function(err, db) {
   if (err) { throw err; }
 
   console.log("Connected correctly to server");
+
+  //check collection exists before trying to drop it
+  if(program.dropCollection){
+    //set dropCollection to false
+    program.dropCollection = false;
+    db.collectionNames(function(err, collections){
+        if(collections.length > 0){
+          for(var i = 0; i < collections.length; i++){
+            var collection = collections[i];
+            if(collection.name == program.collection){
+              //collection found
+              program.dropCollection = true;
+              break;
+            }
+          }
+        }
+    });
+  }
+
   var collection = db.collection(program.collection);
 
   async.series([
@@ -39,7 +58,6 @@ MongoClient.connect(program.uri, function(err, db) {
       if (!program.dropCollection) {
         return callback();
       }
-
       collection.drop(callback);
     },
     function (callback) {
